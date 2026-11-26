@@ -1,47 +1,91 @@
 
+# ==============================
 # Python
+# ==============================
 __pycache__/
 *.py[cod]
 *.egg-info/
 .pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
 
 # Virtual environments
 .venv/
 venv/
+ENV/
+
+# ==============================
+# Environment variables / Secrets
+# ==============================
 .env
+.env.*
+!.env.example
 
+# ==============================
 # Jupyter
+# ==============================
 .ipynb_checkpoints/
+**/.ipynb_checkpoints/
+Untitled.ipynb
 
-# Dataset - NEVER COMMIT
-data/raw/
-data/interim/
-data/processed/
+# ==============================
+# Research data - NEVER COMMIT
+# ==============================
 *.csv
-*.parquet
-*.zip
+*.tsv
+data/raw/*
+data/interim/*
+data/processed/*
+!data/raw/.gitkeep
+!data/interim/.gitkeep
+!data/processed/.gitkeep
 
-# Model artifacts
+*.parquet
 *.pkl
 *.joblib
+
+# Compressed datasets
+*.zip
+*.7z
+
+# ==============================
+# Model artifacts
+# ==============================
 *.h5
 *.pt
 *.pth
+*.onnx
 
-# Reports and temporary files
+# ==============================
+# Reports / Temporary files
+# ==============================
 .DS_Store
 *.log
 *.tmp
+*.bak
 
+# Do not commit generated reports
+lab/reports/figures/*
+lab/reports/tables/*
+
+# ==============================
 # IDE
+# ==============================
 .idea/
 .vscode/
 
+# ==============================
 # Frontend
+# ==============================
 node_modules/
 dist/
 .angular/
+coverage/
 
-# Secrets
-.env.*
-!.env.example
+# ==============================
+# Build / Cache
+# ==============================
+build/
+.cache/
