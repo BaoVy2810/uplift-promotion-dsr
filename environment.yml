@@ -1,0 +1,30 @@
+name: uplift-promotion-dsr
+
+channels:
+  - conda-forge
+  - defaults
+
+dependencies:
+  - python=3.11
+  - pip
+  - numpy
+  - pandas
+  - scipy
+  - scikit-learn
+  - matplotlib
+  - seaborn
+  - jupyterlab
+  - ipykernel
+  - openpyxl
+  - pyarrow
+  - duckdb
+  - polars
+  - pyyaml
+  - pytest
+  - pip:
+      - scikit-uplift
+      - lightgbm
+      - shap
+      - econml
+      - causalml
+      - mlflow

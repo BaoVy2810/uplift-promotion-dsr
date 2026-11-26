@@ -1,0 +1,47 @@
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# Virtual environments
+.venv/
+venv/
+.env
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Dataset - NEVER COMMIT
+data/raw/
+data/interim/
+data/processed/
+*.csv
+*.parquet
+*.zip
+
+# Model artifacts
+*.pkl
+*.joblib
+*.h5
+*.pt
+*.pth
+
+# Reports and temporary files
+.DS_Store
+*.log
+*.tmp
+
+# IDE
+.idea/
+.vscode/
+
+# Frontend
+node_modules/
+dist/
+.angular/
+
+# Secrets
+.env.*
+!.env.example
