@@ -1,82 +1,31 @@
-# Decision 1: Database Selection for the Website
+# D-003: Chọn hệ quản trị CSDL cho website và 4 điều kiện bảo toàn dữ liệu nghiên cứu
 
-**Decision ID:** D-001  
-**Date:** 25/11/2026  
-**Status:** Accepted  
-**Related:** Research Brief, Section 5.2
+Ngày: 26/11/2026 | Trạng thái: Đã chốt  
+Liên quan: G-24.11.26 (Mục 5.2); Issue #4
 
-## 1. Context
+## Bối cảnh
+Website bán hàng trong đề tài đóng vai trò là artefact và môi trường thực nghiệm trực tuyến (RQ3). Hệ thống cần lưu trữ dữ liệu sự kiện người dùng (click, view, add_to_cart), thông tin đồng ý dữ liệu cá nhân (consents), đơn hàng, và đặc biệt là dữ liệu phân bổ chiến dịch (assignments: ai nhận mã, ai thuộc nhóm đối chứng holdout, theo phiên bản mô hình nào). Dữ liệu phân nhóm chiến dịch là bằng chứng thực nghiệm của khóa luận, đòi hỏi tính toàn vẹn, kiểm tra lại được và chống ghi đè. Cần chọn hệ quản trị CSDL vừa tận dụng được kỹ năng của sinh viên vừa đáp ứng tiêu chuẩn nghiên cứu khoa học.
 
-The project requires a database management system for the e-commerce promotion personalization website.
+## Các phương án
+1. **MongoDB:**
+   - *Ưu điểm:* Sinh viên đã thành thạo; cấu trúc tài liệu BSON linh hoạt, rất phù hợp với dữ liệu sự kiện (events) có thuộc tính biến đổi tùy loại hành vi; phát triển nhanh.
+   - *Nhược điểm:* Mặc định không ràng buộc quan hệ chặt chẽ; multi-document transaction cần cấu hình replica set; nếu không kiểm soát sẽ gây sai lệch dữ liệu phân nhóm.
+2. **PostgreSQL:**
+   - *Ưu điểm:* Cấu trúc quan hệ chuẩn mực (ACID mặc định); bảo đảm tính toàn vẹn dữ liệu phân nhóm; hỗ trợ JSONB cho sự kiện linh hoạt.
+   - *Nhược điểm:* Đòi hỏi thời gian thiết kế migration và ORM lớn hơn; tăng tải công việc phát triển web ngoài ngưỡng 30% công sức.
 
-The database should support the application's data structures, user management, and operational requirements while remaining feasible within the project's implementation timeline.
+## Quyết định
+- **Giữ MongoDB** làm CSDL cho website artefact để tối ưu thời gian phát triển cho nghiên cứu, nhưng **bắt buộc tuân thủ 4 điều kiện kiểm soát tính toàn vẹn** do Thầy chỉ định:
+  1. **Mỗi khách chỉ được phân nhóm một lần trong một chiến dịch:** Tạo unique compound index `{ campaign_id: 1, customer_id: 1 }` trên collection `assignments`.
+  2. **Dữ liệu đúng cấu trúc:** Bật schema validation (`$jsonSchema`) với `validationAction: "error"` cho 4 collection trọng yếu: `assignments`, `campaigns`, `coupons`, `consents`. Bản ghi sai định dạng sẽ bị từ chối ở tầng CSDL.
+  3. **Phát mã và đặt hàng nhất quán:** Cấu hình MongoDB dạng Single-Node Replica Set trong Docker Compose để hỗ trợ Multi-Document Transactions.
+  4. **Phân tích độc lập bằng Python:** Dữ liệu nghiên cứu offline không nằm trong CSDL website. Viết script xuất dữ liệu assignments/events/orders sang định dạng Parquet (dùng pymongo kết hợp DuckDB/Polars) để phân tích bằng pipeline Python, không dồn logic phân tích phức tạp vào MongoDB aggregation.
+- Nguyên tắc ghi dữ liệu: Các collection `assignments`, `events` và `consents` là **Append-only** (chỉ ghi thêm, không cập nhật hay xóa đè).
 
-Two database management systems were considered: MongoDB and PostgreSQL.
+## Lý do và bằng chứng
+- Đáp ứng trọn vẹn yêu cầu phương pháp luận: dữ liệu phân nhóm và nhóm đối chứng (holdout) là căn cứ khoa học đo lường hiệu quả gia tăng (Kohavi et al., 2020), do đó 4 điều kiện trên loại bỏ rủi ro gian lận hoặc sai lệch dữ liệu.
+- Giữ được tỷ trọng phát triển phần mềm trong giới hạn ≤ 30% tổng công sức khóa luận, dành 70% còn lại cho phương pháp uplift, phân tích thực nghiệm và viết báo cáo.
 
-## 2. Alternatives Considered
-
-### Option 1: MongoDB
-
-**Advantages:**
-- Flexible document-based data model.
-- Convenient integration with a JavaScript-based application stack.
-- Suitable for storing application data with evolving document structures.
-
-**Disadvantages:**
-- Requires explicit schema validation to maintain data consistency.
-- Relationships and complex queries may require additional design considerations.
-- Transactional consistency must be configured carefully when multiple documents are involved.
-
-### Option 2: PostgreSQL
-
-**Advantages:**
-- Relational data model with structured schemas.
-- Strong support for constraints and transactions.
-- Suitable for applications with complex relationships and relational queries.
-
-**Disadvantages:**
-- Requires careful relational schema design.
-- May involve additional mapping between application objects and relational tables.
-
-## 3. Decision
-
-MongoDB is selected as the database management system for the website application.
-
-The selection is subject to the following implementation conditions:
-
-1. **Schema validation:** Define appropriate validation rules to maintain data consistency.
-2. **Indexes:** Implement unique and compound indexes where required.
-3. **Transactions:** Configure a replica set if multi-document transactions are needed.
-4. **Auditability:** Maintain append-only records for important assignment, event, and consent activities where appropriate.
-
-Research datasets and analytical data will be managed separately from the application database using appropriate research data formats and storage.
-
-## 4. Rationale and Evidence
-
-MongoDB is selected based on its flexible document model and compatibility with the planned JavaScript-based application stack.
-
-The choice also considers the project's implementation scope, development timeline, and the need to keep application data separate from analytical datasets.
-
-The selection does not imply that MongoDB is universally superior to PostgreSQL. It is a project-specific technical decision.
-
-## 5. Consequences
-
-**Benefits:**
-- Provides flexibility for application data structures.
-- Supports integration with the planned application architecture.
-- Keeps operational application data separate from research datasets.
-
-**Trade-offs and limitations:**
-- Data validation and consistency require deliberate implementation.
-- Index design and query performance must be considered.
-- Transaction requirements may introduce additional configuration.
-
-**Risks and mitigation:**
-- Risk of inconsistent documents: implement schema validation.
-- Risk of duplicate records: define appropriate unique indexes.
-- Risk of inconsistent multi-document operations: use transactions where necessary.
-- Risk of losing auditability: maintain appropriate append-only records.
-
-## 6. Review
-
-This decision may be revisited if application requirements change materially or implementation reveals limitations that cannot be addressed within the project's constraints.
+## Hệ quả
+- File `docker-compose.yml` sẽ khởi tạo MongoDB với tham số `--replSet rs0` và có script tự động `rs.initiate()`.
+- Pipeline dữ liệu phân tích sẽ duy trì mã nguồn trích xuất Parquet trong `lab/src/uplift_lab/data.py`.
