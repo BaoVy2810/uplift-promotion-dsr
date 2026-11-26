@@ -18,6 +18,8 @@ docs/
 |---|---|
 | `README.md` | Explains documentation structure, naming conventions, and templates. |
 | `analysis_plan.md` | Describes research objectives, questions, experimental design, modeling approach, and evaluation plan. |
+| `data-cards/` | Detailed documentation, source terms, variable definitions and preliminary EDA findings summaries. |
+| `decisions/` | Formal Decision Logs following DSRM guidelines. |
 | `research-log/` | Records weekly research progress, activities, findings, and challenges. |
 | `decisions/` | Documents important project and research decisions, including their rationale and alternatives. |
 

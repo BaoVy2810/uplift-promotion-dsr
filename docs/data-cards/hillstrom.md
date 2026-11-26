@@ -1,5 +1,11 @@
 # Data card: Hillstrom (MineThatData E-Mail Analytics and Data Mining Challenge)
 
+> [!TIP]
+> **Báo cáo kết quả khám phá sơ bộ (EDA Summary) và Checklist tuân thủ Mục 6.3:**  
+> Xem toàn văn kết quả định lượng chi tiết, bảng kiểm định cân bằng ngẫu nhiên hóa, phân tích ATE kèm khoảng tin cậy 95%, phân phối chi tiêu và 3 biểu đồ trực quan tại:  
+> 🔗 **[`hillstrom_eda_summary.md`](hillstrom_eda_summary.md)**  
+> 📓 Notebook tái lập: [`../../lab/notebooks/01_hillstrom_eda.ipynb`](../../lab/notebooks/01_hillstrom_eda.ipynb)
+
 ## 1. Nguồn
 - Tác giả: Kevin Hillstrom (MineThatData); bài đăng ngày 20/3/2008
 - Trang gốc: Hillstrom, K. (2008, March 20). The MineThatData e-mail analytics and data mining challenge [Blog post]. MineThatData. https://blog.minethatdata.com/2008/03/minethatdata-e-mail-analytics-and-data.html
@@ -65,5 +71,8 @@ Can thiệp là một chiến dịch email quảng bá hàng nam hoặc hàng n�
 - Gộp 3 giá trị `segment` thành `group` (men/women/control)
 - Không loại dòng trùng; không chuẩn hóa ở bước EDA
 
-## 10. Tái lập
-Notebook: `lab/notebooks/01_hillstrom_eda.ipynb`; seed 42; kết quả: `lab/reports/figures/hillstrom_eda/` và `lab/reports/tables/hillstrom_eda/`.
+## 10. Tái lập và Báo cáo phát hiện
+- Notebook phân tích: [`../../lab/notebooks/01_hillstrom_eda.ipynb`](../../lab/notebooks/01_hillstrom_eda.ipynb); seed 42.
+- Báo cáo tổng hợp EDA & Checklist Mục 6.3: [`hillstrom_eda_summary.md`](hillstrom_eda_summary.md).
+- Kết quả xuất tự động: `lab/reports/figures/hillstrom_eda/` và `lab/reports/tables/hillstrom_eda/`.
+- Quyết định thiết kế so sánh: [`../decisions/D-001-hillstrom-design.md`](../decisions/D-001-hillstrom-design.md).
