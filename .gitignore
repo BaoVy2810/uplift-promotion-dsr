@@ -41,6 +41,7 @@ data/processed/*
 !data/raw/.gitkeep
 !data/interim/.gitkeep
 !data/processed/.gitkeep
+!lab/reports/tables/**/*.csv
 
 *.parquet
 *.pkl
@@ -57,6 +58,9 @@ data/processed/*
 *.pt
 *.pth
 *.onnx
+*.pdf
+*.gz
+mlruns/
 
 # ==============================
 # Reports / Temporary files
@@ -65,10 +69,6 @@ data/processed/*
 *.log
 *.tmp
 *.bak
-
-# Do not commit generated reports
-lab/reports/figures/*
-lab/reports/tables/*
 
 # ==============================
 # IDE
